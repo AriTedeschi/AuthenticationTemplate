@@ -14,6 +14,7 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Entity
+@Table(name = "TB_USER")
 @Builder
 @Getter
 @Setter
@@ -23,12 +24,8 @@ public class UserEntity {
     private UUID uuid;
 
     @Convert(converter = UserCodeConverter.class)
+    @Column(name = "user_code")
     private UserCode userCode;
-
-    @Embedded
-    @AttributeOverride(name = "firstName", column = @Column(name = "first_name"))
-    @AttributeOverride(name = "lastName", column = @Column(name = "last_name"))
-    private NameVO fullname;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "email"))
@@ -37,6 +34,11 @@ public class UserEntity {
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "password"))
     private PasswordVO password;
+
+    @Embedded
+    @AttributeOverride(name = "firstName", column = @Column(name = "first_name"))
+    @AttributeOverride(name = "lastName", column = @Column(name = "last_name"))
+    private NameVO fullname;
 
     @PrePersist
     public void generateId() {

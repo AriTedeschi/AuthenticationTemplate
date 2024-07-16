@@ -12,10 +12,11 @@ import lombok.Setter;
 public class NameVO {
     private String firstName;
     private String lastName;
+    public String get(){return firstName + " " +lastName;}
 
     public String obfuscate(){
         String obfuscated = "";
-        String fullname = firstName + " " +lastName;
+        String fullname = get();
         String[] nameTokens = fullname.split(" ");
         for(int i = 0; i < nameTokens.length; i++){
             obfuscated = i % 2 == 0 ? ("*".repeat(nameTokens[i].length())) : nameTokens[i];

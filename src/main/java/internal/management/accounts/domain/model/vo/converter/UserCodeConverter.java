@@ -17,14 +17,19 @@ public class UserCodeConverter implements AttributeConverter<UserCode, String> {
 
     @Override
     public UserCode convertToEntityAttribute(String dbData) {
+        String[] parts = slice(dbData);
+        return new UserCode(parts[0], parts[1], parts[2]);
+    }
+
+    public static String[] slice(String dbData){
         if (dbData == null || dbData.isEmpty()) {
-            return null;
+            return new String[]{};
         }
         String[] parts = dbData.split("-");
         if (parts.length != 3) {
             throw new IllegalArgumentException("Invalid user code format");
         }
-        return new UserCode(parts[0], parts[1], parts[2]);
+        return parts;
     }
 }
 
