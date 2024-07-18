@@ -4,5 +4,13 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password:
-    platform: h2
-    schema: classpath:init-db/init.sql
+    initialization-mode: always
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:init-db/init.sql
