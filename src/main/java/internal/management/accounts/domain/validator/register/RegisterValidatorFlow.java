@@ -13,11 +13,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestValidatorFlow implements ValidationFlow {
+public class RegisterValidatorFlow implements ValidationFlow {
     private Map<String, String> errors = new HashMap<>();
     private Validator<String> initValidator;
 
-    public RequestValidatorFlow(UserRegisterRequest request, UserRepository repository){
+    public RegisterValidatorFlow(UserRegisterRequest request, UserRepository repository){
         NameVO name = new NameVO(request.firstName(),request.lastName());
 
         this.initValidator = new EmailRegisterValidator(request.email(),this, repository,

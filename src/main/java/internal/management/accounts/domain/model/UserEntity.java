@@ -4,7 +4,6 @@ import internal.management.accounts.domain.model.vo.EmailVO;
 import internal.management.accounts.domain.model.vo.NameVO;
 import internal.management.accounts.domain.model.vo.PasswordVO;
 import internal.management.accounts.domain.model.vo.UserCode;
-import internal.management.accounts.domain.model.vo.converter.UUIDv7Generator;
 import internal.management.accounts.domain.model.vo.converter.UserCodeConverter;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -20,7 +19,7 @@ import java.util.UUID;
 @Setter
 public class UserEntity {
     @Id
-    @Column(updatable = false, nullable = false)
+    @GeneratedValue(generator = "UUID")
     private UUID uuid;
 
     @Convert(converter = UserCodeConverter.class)
@@ -40,9 +39,4 @@ public class UserEntity {
     @AttributeOverride(name = "lastName", column = @Column(name = "last_name"))
     private NameVO fullname;
 
-    @PrePersist
-    public void generateId() {
-        if (uuid == null)
-            uuid = UUIDv7Generator.generateUUID();
-    }
 }

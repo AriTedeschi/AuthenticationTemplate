@@ -7,7 +7,7 @@ import internal.management.accounts.domain.model.request.UserRegisterRequest;
 import internal.management.accounts.domain.model.response.UserRegisterResponse;
 import internal.management.accounts.domain.repository.UserRepository;
 import internal.management.accounts.domain.service.UserService;
-import internal.management.accounts.domain.validator.register.RequestValidatorFlow;
+import internal.management.accounts.domain.validator.register.RegisterValidatorFlow;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserRegisterResponse register(UserRegisterRequest request) {
-        new RequestValidatorFlow(request, repository).validate();
+        new RegisterValidatorFlow(request, repository).validate();
 
         UserEntity entity = new UserRegisterRequest2UserEntity(request).getInstance();
         entity.getUserCode().set(repository.generateUserCode());

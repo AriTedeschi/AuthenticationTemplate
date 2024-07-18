@@ -18,12 +18,12 @@ public abstract class Validator<T> {
 
 
 //    Validator without nullcheck
-//    protected Validator(T field, ValidationFlow registerValidator, Validator<?> nextValidation){
-//        this.field = field;
-//        this.registerValidator=registerValidator;
-//        this.nextValidation=nextValidation;
-//        this.nullCheck = false;
-//    }
+    protected Validator(T field, ValidationFlow registerValidator, Validator<?> nextValidation){
+        this.field = field;
+        this.registerValidator=registerValidator;
+        this.nextValidation=nextValidation;
+        this.nullCheck = false;
+    }
 
     public void validate() {
         validateNext();
@@ -31,6 +31,7 @@ public abstract class Validator<T> {
     private void validateNext(){
         if(nextValidation != null)
             nextValidation.validate();
+        this.nextValidation = null;
     }
     protected boolean isNull() {
         if(!nullCheck)
