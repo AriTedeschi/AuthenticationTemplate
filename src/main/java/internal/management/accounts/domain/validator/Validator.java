@@ -1,30 +1,23 @@
 package internal.management.accounts.domain.validator;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 public abstract class Validator<T> {
-    protected ValidationFlow registerValidator;
+    protected ValidationFlow validation;
     private Validator<?> nextValidation;
     private String nullMessage;
     private boolean nullCheck;
+    private ResourceBundle bundle;
     protected T field;
 
-    protected Validator(T field, ValidationFlow registerValidator, Validator<?> nextValidation, String nullMessage){
+    protected Validator(T field, ValidationFlow validation, Validator<?> nextValidation, String nullMessage){
         this.field = field;
-        this.registerValidator=registerValidator;
+        this.validation=validation;
         this.nextValidation=nextValidation;
         this.nullMessage=nullMessage;
         this.nullCheck = true;
+        this.bundle = ResourceBundle.getBundle("messages", validation.getLocale());
     }
-
-
-//    Validator without nullcheck
-    protected Validator(T field, ValidationFlow registerValidator, Validator<?> nextValidation){
-        this.field = field;
-        this.registerValidator=registerValidator;
-        this.nextValidation=nextValidation;
-        this.nullCheck = false;
-    }
-
     public void validate() {
         validateNext();
     }
@@ -40,7 +33,10 @@ public abstract class Validator<T> {
         String fieldName = nullMessage.split(":")[0];
         String errorMessage = nullMessage.split(":")[1];
         if(Objects.isNull(this.field))
-            registerValidator.addError(fieldName,errorMessage);
+            validation.addError(fieldName, getMessage(errorMessage));
         return Objects.isNull(this.field);
+    }
+    protected String getMessage(String key){
+        return bundle.getString(key);
     }
 }

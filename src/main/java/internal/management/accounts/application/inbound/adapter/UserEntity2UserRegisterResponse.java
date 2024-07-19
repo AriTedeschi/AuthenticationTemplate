@@ -1,7 +1,7 @@
-package internal.management.accounts.domain.model.adapter;
+package internal.management.accounts.application.inbound.adapter;
 
 import internal.management.accounts.domain.model.UserEntity;
-import internal.management.accounts.domain.model.response.UserRegisterResponse;
+import internal.management.accounts.application.inbound.response.UserRegisterResponse;
 
 public class UserEntity2UserRegisterResponse {
     private UserRegisterResponse instance;

@@ -1,7 +1,7 @@
-package internal.management.accounts.domain.model.adapter;
+package internal.management.accounts.application.inbound.adapter;
 
 import internal.management.accounts.domain.model.UserEntity;
-import internal.management.accounts.domain.model.request.UserRegisterRequest;
+import internal.management.accounts.application.inbound.request.UserRegisterRequest;
 import internal.management.accounts.domain.model.vo.EmailVO;
 import internal.management.accounts.domain.model.vo.NameVO;
 import internal.management.accounts.domain.model.vo.PasswordVO;

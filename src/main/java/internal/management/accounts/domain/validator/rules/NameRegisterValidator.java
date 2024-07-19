@@ -13,7 +13,7 @@ public class NameRegisterValidator extends Validator<NameVO> {
     private NameVO name;
 
     public NameRegisterValidator(NameVO name, ValidationFlow registerValidator, Validator<Integer> nextValidation){
-        super(name, registerValidator, nextValidation,"name:Provide a name!");
+        super(name, registerValidator, nextValidation,"name:register.name.null");
         this.name=name;
     }
 
@@ -29,13 +29,13 @@ public class NameRegisterValidator extends Validator<NameVO> {
 
     private void validateSintax(String field, String fieldName) {
         if(Objects.isNull(field)){
-            registerValidator.addError(fieldName,"Provide a "+fieldName);
+            validation.addError(fieldName, String.format(getMessage("register.name.one.null"), fieldName));
             return;
         }
 
         Pattern pattern = Pattern.compile(NAME_REGEX);
         Matcher matcher = pattern.matcher(field);
         if(!matcher.matches())
-            registerValidator.addError("name",fieldName+" syntax error, please provide a correct name");
+            validation.addError("name",String.format(getMessage("register.name.syntax"), fieldName));
     }
 }

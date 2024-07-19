@@ -21,6 +21,6 @@ public class EmailSearchValidator extends Validator<String> {
             return;
         if(repository.findByEmail(email).isPresent())
             return;
-        registerValidator.addError("email","Provided email not registered!");
+        validation.addError("email","Provided email not registered!");
     }
 }

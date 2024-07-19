@@ -12,8 +12,8 @@ public class EmailRegisterValidator extends Validator<String> {
     private String email;
     private UserRepository repository;
 
-    public EmailRegisterValidator(String email, ValidationFlow registerValidator, UserRepository repository, Validator<?> nextValidation){
-        super(email,registerValidator, nextValidation,"email:Provide an email!");
+    public EmailRegisterValidator(String email, ValidationFlow validation, UserRepository repository, Validator<?> nextValidation){
+        super(email,validation, nextValidation,"email:register.email.null");
         this.repository = repository;
         this.email=email;
     }
@@ -27,8 +27,8 @@ public class EmailRegisterValidator extends Validator<String> {
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(email);
         if(!matcher.matches())
-            registerValidator.addError("email","Email syntax error, please provide a correct email");
+            validation.addError("email",getMessage("register.email.syntax"));
         if(repository.findByEmail(email).isPresent())
-            registerValidator.addError("email","Email has already been registered!");
+            validation.addError("email",getMessage("register.email.used"));
     }
 }
