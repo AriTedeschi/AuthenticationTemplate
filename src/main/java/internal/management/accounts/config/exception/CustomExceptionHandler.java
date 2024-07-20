@@ -20,4 +20,11 @@ public class CustomExceptionHandler {
         ApiErrorMessage apiErrorMessage = new ApiErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.convert());
         return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getStatus());
     }
+
+    @ExceptionHandler(QueryException.class)
+    public ResponseEntity<Object> handleQueryException(
+            QueryException exception, WebRequest request) {
+        ApiErrorMessage apiErrorMessage = new ApiErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.convert());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getStatus());
+    }
 }
