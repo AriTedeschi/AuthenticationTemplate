@@ -3,5 +3,7 @@ spring:
     name: accounts
   profiles:
       active: ${SPRING_PROFILE:dev}
+regex:
+  email: ^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$
 server:
   port: ${AUTH_SERVICE_PORT:8080} #Default port 8080
