@@ -1,4 +1,4 @@
-package internal.management.accounts.application.inbound;
+package internal.management.accounts.domain.service.inbound;
 
 import internal.management.accounts.application.inbound.adapter.UserEntity2UserRegisterResponse;
 import internal.management.accounts.application.inbound.adapter.UserRegisterRequest2UserEntity;
@@ -8,7 +8,6 @@ import internal.management.accounts.config.exception.QueryException;
 import internal.management.accounts.config.exception.UserCodeOverflowException;
 import internal.management.accounts.domain.model.UserEntity;
 import internal.management.accounts.domain.repository.UserRepository;
-import internal.management.accounts.domain.service.inbound.UserRegisterService;
 import internal.management.accounts.domain.validator.SupportedLocales;
 import internal.management.accounts.domain.validator.register.RegisterValidatorFlow;
 import lombok.extern.slf4j.Slf4j;

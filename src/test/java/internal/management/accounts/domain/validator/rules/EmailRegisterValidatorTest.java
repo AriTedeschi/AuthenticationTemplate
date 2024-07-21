@@ -30,7 +30,6 @@ class EmailRegisterValidatorTest {
 
         RegisterValidatorFlow registerValidator = new RegisterValidatorFlow(request,"en",repository);
         EmailRegisterValidator emailRegisterValidator = new EmailRegisterValidator(email, registerValidator, repository, null);
-        emailRegisterValidator.setEmailRegex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
 
         emailRegisterValidator.validate();
         assertEquals(expectedError,registerValidator.containsError());

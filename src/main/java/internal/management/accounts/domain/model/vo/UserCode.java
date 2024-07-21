@@ -19,7 +19,7 @@ public class UserCode {
         String[] parts = UserCodeConverter.slice(userCode);
         accountPrefix = parts[0];
         accountInfix = parts[1];
-        accountSufix = parts[3];
+        accountSufix = parts[2];
     }
 
     public String get(){

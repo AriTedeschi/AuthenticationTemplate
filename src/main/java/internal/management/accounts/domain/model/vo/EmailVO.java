@@ -3,11 +3,13 @@ package internal.management.accounts.domain.model.vo;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
 public class EmailVO {
     private String value;

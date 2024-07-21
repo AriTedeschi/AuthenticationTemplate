@@ -6,9 +6,7 @@ import internal.management.accounts.domain.model.vo.PasswordVO;
 import internal.management.accounts.domain.model.vo.UserCode;
 import internal.management.accounts.domain.model.vo.converter.UserCodeConverter;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -17,6 +15,8 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserEntity {
     @Id
     @GeneratedValue(generator = "UUID")
