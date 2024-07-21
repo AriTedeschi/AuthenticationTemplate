@@ -7,6 +7,8 @@ import internal.management.accounts.domain.model.vo.NameVO;
 import internal.management.accounts.domain.model.vo.PasswordVO;
 import internal.management.accounts.domain.model.vo.UserCode;
 
+import java.time.LocalDateTime;
+
 public class UserRegisterRequest2UserEntity {
     private UserEntity instance;
     public UserRegisterRequest2UserEntity(UserRegisterRequest request) {
@@ -15,6 +17,7 @@ public class UserRegisterRequest2UserEntity {
                 .email(new EmailVO(request.email()))
                 .password(new PasswordVO().encode(request.password()))
                 .fullname(new NameVO(request.firstName(), request.lastName()))
+                .createdAt(LocalDateTime.now())
                 .build();
     }
     public UserEntity getInstance(){return this.instance;}

@@ -15,8 +15,12 @@ public class EmailVO {
     private String value;
 
     public String obfuscate(){
-        String obfuscate = value.split("@")[0];
-        String emailProvider = value.split("@")[1];
+        String[] emailParts = value.split("@");
+        String obfuscate = emailParts[0];
+        String emailProvider = emailParts[1];
+        if (obfuscate.length() <= 3) {
+            return "*".repeat(obfuscate.length()) + "@" + emailProvider;
+        }
         return (obfuscate.substring(0,3))+"*".repeat(obfuscate.length() - 3)+emailProvider;
     }
 }

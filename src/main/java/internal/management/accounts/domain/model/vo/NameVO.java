@@ -21,7 +21,8 @@ public class NameVO {
         String fullname = get();
         String[] nameTokens = fullname.split(" ");
         for(int i = 0; i < nameTokens.length; i++){
-            obfuscated = i % 2 == 0 ? ("*".repeat(nameTokens[i].length())) : nameTokens[i];
+            obfuscated += i % 2 == 0 ? nameTokens[i] : ("*".repeat(nameTokens[i].length()));
+            obfuscated += !(i == nameTokens.length-1) ?  " " : "";
         }
         return obfuscated;
     }

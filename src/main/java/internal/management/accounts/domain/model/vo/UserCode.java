@@ -27,6 +27,6 @@ public class UserCode {
     }
 
     public String obfuscate(){
-        return (this.accountPrefix.substring(0,2))+"***-"+accountInfix+"-"+accountSufix;
+        return (this.accountPrefix.substring(0,2))+"**"+this.accountPrefix.substring(4,5)+"-"+accountInfix+"-"+accountSufix;
     }
 }

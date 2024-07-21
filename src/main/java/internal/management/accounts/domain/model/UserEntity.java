@@ -8,6 +8,7 @@ import internal.management.accounts.domain.model.vo.converter.UserCodeConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -39,4 +40,6 @@ public class UserEntity {
     @AttributeOverride(name = "lastName", column = @Column(name = "last_name"))
     private NameVO fullname;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 }
