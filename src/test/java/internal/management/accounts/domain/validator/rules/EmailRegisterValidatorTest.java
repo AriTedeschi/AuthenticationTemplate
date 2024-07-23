@@ -4,7 +4,7 @@ import internal.management.accounts.application.inbound.request.UserRegisterRequ
 import internal.management.accounts.config.exception.ValidationException;
 import internal.management.accounts.domain.model.UserEntity;
 import internal.management.accounts.domain.repository.UserRepository;
-import internal.management.accounts.domain.validator.register.RegisterValidatorFlow;
+import internal.management.accounts.domain.validator.register.UserRegisterValidatorFlow;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -28,7 +28,7 @@ class EmailRegisterValidatorTest {
         Optional<UserEntity> queryResponse = Objects.isNull(userEntity) ? Optional.empty() : Optional.of(userEntity);
         when(repository.findByEmail(email)).thenReturn(queryResponse);
 
-        RegisterValidatorFlow registerValidator = new RegisterValidatorFlow(request,"en",repository);
+        UserRegisterValidatorFlow registerValidator = new UserRegisterValidatorFlow(request,"en",repository);
         EmailRegisterValidator emailRegisterValidator = new EmailRegisterValidator(email, registerValidator, repository, null);
 
         emailRegisterValidator.validate();
@@ -45,7 +45,7 @@ class EmailRegisterValidatorTest {
         Optional<UserEntity> queryResponse = Optional.empty();
         when(repository.findByEmail(email)).thenReturn(queryResponse);
 
-        RegisterValidatorFlow registerValidator = new RegisterValidatorFlow(request,locale,repository);
+        UserRegisterValidatorFlow registerValidator = new UserRegisterValidatorFlow(request,locale,repository);
         new EmailRegisterValidator(email, registerValidator, repository, null).validate();
         ValidationException exception = assertThrows(ValidationException.class, registerValidator::validate);
 

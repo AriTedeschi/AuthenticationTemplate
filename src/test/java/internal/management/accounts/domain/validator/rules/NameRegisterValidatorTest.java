@@ -3,7 +3,7 @@ package internal.management.accounts.domain.validator.rules;
 import internal.management.accounts.application.inbound.request.UserRegisterRequest;
 import internal.management.accounts.domain.model.vo.NameVO;
 import internal.management.accounts.domain.repository.UserRepository;
-import internal.management.accounts.domain.validator.register.RegisterValidatorFlow;
+import internal.management.accounts.domain.validator.register.UserRegisterValidatorFlow;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -22,7 +22,7 @@ class NameRegisterValidatorTest {
         UserRegisterRequest request = new UserRegisterRequest("email","password",firstName,lastName);
         NameVO name = new NameVO(firstName,lastName);
 
-        RegisterValidatorFlow registerValidator = new RegisterValidatorFlow(request,null,repository);
+        UserRegisterValidatorFlow registerValidator = new UserRegisterValidatorFlow(request,null,repository);
         new NameRegisterValidator(name, registerValidator,null).validate();
         assertEquals(expectedError,registerValidator.containsError());
     }
