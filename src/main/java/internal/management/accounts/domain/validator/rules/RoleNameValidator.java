@@ -13,7 +13,7 @@ public class RoleNameValidator extends Validator<String> {
     private static final String NAME_REGEX = "^[a-zA-Z0-9\\s]*$";
 
     public RoleNameValidator(String request, ValidationFlow registerValidator, Validator<Integer> nextValidation){
-        super(request, registerValidator, nextValidation,"name:register.name.null");
+        super(request, registerValidator, nextValidation,"roleName:register.roleName.null");
     }
 
     @Override

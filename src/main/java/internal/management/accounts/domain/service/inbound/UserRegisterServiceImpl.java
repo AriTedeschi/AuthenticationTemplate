@@ -9,7 +9,7 @@ import internal.management.accounts.config.exception.UserCodeOverflowException;
 import internal.management.accounts.domain.model.UserEntity;
 import internal.management.accounts.domain.repository.UserRepository;
 import internal.management.accounts.domain.validator.SupportedLocales;
-import internal.management.accounts.domain.validator.register.RegisterValidatorFlow;
+import internal.management.accounts.domain.validator.register.UserRegisterValidatorFlow;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     @Override
     public UserRegisterResponse register(UserRegisterRequest request, String locale) {
         try {
-            new RegisterValidatorFlow(request, locale, repository).validate();
+            new UserRegisterValidatorFlow(request, locale, repository).validate();
             UserEntity entity = new UserRegisterRequest2UserEntity(request).getInstance();
             entity.getUserCode().set(repository.generateUserCode());
             return new UserEntity2UserRegisterResponse(repository.save(entity), false).getInstance();

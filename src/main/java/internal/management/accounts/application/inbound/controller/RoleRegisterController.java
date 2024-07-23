@@ -2,10 +2,9 @@ package internal.management.accounts.application.inbound.controller;
 
 
 import internal.management.accounts.application.annotation.RegisterOperation;
-import internal.management.accounts.application.inbound.request.UserRegisterRequest;
-import internal.management.accounts.application.inbound.response.UserRegisterResponse;
+import internal.management.accounts.application.inbound.request.RoleRegisterRequest;
 import internal.management.accounts.config.exception.ApiErrorMessage;
-import internal.management.accounts.domain.service.inbound.UserRegisterService;
+import internal.management.accounts.domain.service.inbound.RoleRegisterService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,29 +17,29 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @Controller
-@RequestMapping(UserController.BASE_URL)
-public class UserController {
-    public static final String BASE_URL = "/users";
-    private final UserRegisterService service;
+@RequestMapping(RoleRegisterController.BASE_URL)
+public class RoleRegisterController {
+    public static final String BASE_URL = "/roles";
+    private final RoleRegisterService service;
 
-    public UserController(UserRegisterService service) {
+    public RoleRegisterController(RoleRegisterService service) {
         this.service = service;
     }
 
     @PostMapping("/register")
     @RegisterOperation(
-            summary = "Register User",
-            responseClass = UserRegisterResponse.class,
+            summary = "Register Role",
+            responseClass = RoleRegisterRequest.class,
             errorClass = ApiErrorMessage.class
     )
-    public ResponseEntity<UserRegisterResponse> register(
-            @RequestBody UserRegisterRequest userRequest,
+    public ResponseEntity<RoleRegisterRequest> register(
+            @RequestBody RoleRegisterRequest roleRegister,
             @RequestParam(value = "lang", required = false) String lang,
             HttpServletRequest request){
-        UserRegisterResponse response = service.register(userRequest,lang);
+        RoleRegisterRequest response = service.addMember(roleRegister,lang);
         URI location = ServletUriComponentsBuilder.fromRequestUri(request)
-                .path("/{accountCode}")
-                .buildAndExpand(response.userCode())
+                .path("/{id}")
+                .buildAndExpand(response.roleId())
                 .toUri();
         return ResponseEntity.created(location).body(response);
     }

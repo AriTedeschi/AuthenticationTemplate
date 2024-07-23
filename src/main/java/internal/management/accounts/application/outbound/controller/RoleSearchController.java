@@ -2,12 +2,13 @@ package internal.management.accounts.application.outbound.controller;
 
 
 import internal.management.accounts.application.annotation.SearchOperation;
-import internal.management.accounts.application.inbound.response.UserRegisterResponse;
-import internal.management.accounts.application.outbound.request.UserSearchFilter;
+import internal.management.accounts.application.inbound.request.RoleRegisterRequest;
+import internal.management.accounts.application.outbound.request.RoleSearchFilter;
 import internal.management.accounts.config.exception.ApiErrorMessage;
 import internal.management.accounts.config.exception.ValidationException;
-import internal.management.accounts.domain.service.outbound.UserSearchService;
+import internal.management.accounts.domain.service.outbound.RoleSearchService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.websocket.server.PathParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,40 +24,50 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(UserSearchController.BASE_URL)
-public class UserSearchController {
-    public static final String BASE_URL = "/users";
-    private final UserSearchService service;
+@RequestMapping(RoleSearchController.BASE_URL)
+public class RoleSearchController {
+    public static final String BASE_URL = "/roles";
+    private final RoleSearchService service;
 
-    public UserSearchController(UserSearchService service) {
+    public RoleSearchController(RoleSearchService service) {
         this.service = service;
     }
 
     @GetMapping("")
     @SearchOperation(
             summary = "Search Users",
-            responseClass = UserRegisterResponse.class,
+            responseClass = RoleRegisterRequest.class,
             errorClass = ApiErrorMessage.class
     )
-    public ResponseEntity<Page<UserRegisterResponse>> register(
+    public ResponseEntity<Page<RoleRegisterRequest>> register(
             @RequestParam(value = "page", defaultValue = "0") 		    Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "10")  Integer linesPerPage,
             @RequestParam(value = "direction", defaultValue = "DESC") 	String 	direction,
-            @RequestParam(value = "orderBy", defaultValue = "createdAt")String 	orderBy,
+            @RequestParam(value = "orderBy", defaultValue = "id")       String 	orderBy,
             @RequestParam(value = "lang", required = false)             String lang,
             //============================================================================
-            @RequestParam(value = "userId", required = false) String userId,
-            @RequestParam(value = "userCode", required = false) String userCode,
-            @RequestParam(value = "email", required = false) String email,
-            @RequestParam(value = "firstName", required = false) String firstName,
-            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "roleId", required = false) String roleId,
+            @RequestParam(value = "roleName", required = false) String roleName,
             HttpServletRequest request){
         validatePagination(page, linesPerPage, direction);
         direction = direction.toUpperCase();
-        UserSearchFilter filter = new UserSearchFilter(userId, userCode, email, firstName, lastName, lang);
+        RoleSearchFilter filter = new RoleSearchFilter(roleId, roleName, lang);
 
         Pageable pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction),orderBy);
         return ResponseEntity.ok(service.search(filter,pageRequest));
+    }
+
+
+    @GetMapping("/{id}")
+    @SearchOperation(
+            summary = "Search role by id",
+            responseClass = RoleRegisterRequest.class,
+            errorClass = ApiErrorMessage.class
+    )
+    public ResponseEntity<RoleRegisterRequest> byId(
+            @RequestParam(value = "lang", required = false) String lang,
+            @PathParam("id") Integer id){
+        return ResponseEntity.ok(service.byId(id,lang));
     }
 
     private void validatePagination(Integer page, Integer linesPerPage, String direction){

@@ -14,12 +14,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class RegisterValidatorFlow implements ValidationFlow {
+public class UserRegisterValidatorFlow implements ValidationFlow {
     private Map<String, String> errors = new HashMap<>();
     private Validator<String> initValidator;
     private String locale;
 
-    public RegisterValidatorFlow(UserRegisterRequest request, String locale, UserRepository repository){
+    public UserRegisterValidatorFlow(UserRegisterRequest request, String locale, UserRepository repository){
         NameVO name = new NameVO(request.firstName(),request.lastName());
         this.locale = locale;
 

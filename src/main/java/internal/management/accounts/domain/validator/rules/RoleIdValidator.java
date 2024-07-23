@@ -10,7 +10,7 @@ public class RoleIdValidator extends Validator<Integer> {
     private RoleRepository repository;
 
     public RoleIdValidator(Integer roleId, ValidationFlow registerValidator, RoleRepository repository, Validator<String> nextValidation){
-        super(roleId, registerValidator, nextValidation,"name:register.name.null");
+        super(roleId, registerValidator, nextValidation,"roleId:register.roleId.null");
         this.repository = repository;
     }
 
