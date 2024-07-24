@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private static final String[] WHITELIST_SWAGGER = {"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"};
     private static final String[] WHITELIST_REGISTER_AUTH = {"/users/register","/login"};
+    private static final String[] BLACKLIST_ENDPOINTS = {"/users","/roles","/roles/*"};
     @Autowired
     private SecurityFilter securityFilter;
 
@@ -28,8 +29,8 @@ public class SecurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->{
-                    auth.requestMatchers(HttpMethod.GET,"/users/**").hasRole("USER");
-                    auth.requestMatchers(HttpMethod.PATCH,"/users/**").hasRole("USER");
+                    auth.requestMatchers(HttpMethod.GET,BLACKLIST_ENDPOINTS).authenticated();
+                    auth.requestMatchers(HttpMethod.POST,BLACKLIST_ENDPOINTS).authenticated();
                     auth.requestMatchers(HttpMethod.POST,WHITELIST_REGISTER_AUTH).permitAll();
                     auth.requestMatchers(WHITELIST_SWAGGER).permitAll();
                     auth.requestMatchers("/error").permitAll();
