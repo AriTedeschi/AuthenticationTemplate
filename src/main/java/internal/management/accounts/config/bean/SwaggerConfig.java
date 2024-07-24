@@ -1,4 +1,4 @@
-package internal.management.accounts.application.config;
+package internal.management.accounts.config.bean;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
