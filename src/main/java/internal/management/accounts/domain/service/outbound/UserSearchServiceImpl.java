@@ -4,6 +4,8 @@ import internal.management.accounts.application.inbound.response.UserRegisterRes
 import internal.management.accounts.application.outbound.adapter.UserEntity2UserRegisterResponse;
 import internal.management.accounts.application.outbound.request.UserSearchFilter;
 import internal.management.accounts.domain.model.UserEntity;
+import internal.management.accounts.domain.repository.UserRepository;
+import internal.management.accounts.domain.service.outbound.factory.UserLookupFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -11,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,9 +28,11 @@ import java.util.stream.Stream;
 public class UserSearchServiceImpl implements UserSearchService {
     private static final String MULTIPLE_VALUES_DELIMITER = ",";
     private EntityManager entityManager;
+    private UserRepository repository;
 
-    public UserSearchServiceImpl(EntityManager entityManager) {
+    public UserSearchServiceImpl(EntityManager entityManager, UserRepository repository) {
         this.entityManager = entityManager;
+        this.repository = repository;
     }
 
     @Override
@@ -65,6 +70,14 @@ public class UserSearchServiceImpl implements UserSearchService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(responseList, pageable, totalRecords);
+    }
+
+    @Override
+    public UserRegisterResponse getBy(String identifier, String lang) {
+        UserEntity entity = UserLookupFactory.getBy(identifier, repository);
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        return new UserEntity2UserRegisterResponse(entity, !name.equals(entity.getUserCode().get())).getInstance();
     }
 
     private void addPredicate(List<Predicate> predicates, String field, String fieldColumn,

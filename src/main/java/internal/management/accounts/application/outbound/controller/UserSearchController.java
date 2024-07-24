@@ -8,6 +8,7 @@ import internal.management.accounts.config.exception.ApiErrorMessage;
 import internal.management.accounts.config.exception.ValidationException;
 import internal.management.accounts.domain.service.outbound.UserSearchService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.websocket.server.PathParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -57,6 +58,19 @@ public class UserSearchController {
 
         Pageable pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction),orderBy);
         return ResponseEntity.ok(service.search(filter,pageRequest));
+    }
+
+    @GetMapping("/{identifier}")
+    @SearchOperation(
+            summary = "Get user by identifier",
+            responseClass = UserRegisterResponse.class,
+            errorClass = ApiErrorMessage.class
+    )
+    public ResponseEntity<UserRegisterResponse> getBy(
+            @RequestParam(value = "lang", required = false) String lang,
+            @PathParam("identifier") String identifier,
+            HttpServletRequest request){
+        return ResponseEntity.ok(service.getBy(identifier, lang));
     }
 
     private void validatePagination(Integer page, Integer linesPerPage, String direction){

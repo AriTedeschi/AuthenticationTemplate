@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface UserSearchService {
     Page<UserRegisterResponse> search(UserSearchFilter request, Pageable pageable);
+    UserRegisterResponse getBy(String identifier, String lang);
 }
