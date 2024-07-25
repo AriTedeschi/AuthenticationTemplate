@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private static final String[] WHITELIST_SWAGGER = {"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"};
+    private static final String[] WHITELIST_SWAGGER = {"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/h2-console/**","/favicon.ico"};
     private static final String[] WHITELIST_REGISTER_AUTH = {"/users/register","/login"};
     private static final String[] BLACKLIST_ENDPOINTS = {"/users","/roles","/roles/*"};
     @Autowired
@@ -36,6 +36,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/error").permitAll();
                     auth.anyRequest().authenticated();
                 })
+                .headers(headers -> headers.frameOptions().sameOrigin())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

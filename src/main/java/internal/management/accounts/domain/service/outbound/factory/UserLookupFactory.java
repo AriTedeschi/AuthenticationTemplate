@@ -8,11 +8,31 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @Slf4j
 public class UserLookupFactory {
 
+    //TODO incluir messagens em MessageBundle
     public static UserEntity getBy(String login, UserRepository repository){
         long hyphenCount = login.chars().filter(ch -> ch == '-').count();
         UserLookup findByUuid = (userCode) -> repository.findByUuid(userCode);
         UserLookup findByUserCode = (userCode) -> repository.findByUserCode(userCode);
-        UserLookup findByEmail = (email) -> repository.findByEmail(email);
+
+        if (login.length() == 36 && hyphenCount == 4){
+            log.info("Getting by uuid");
+            return findByUuid.apply(login).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        }
+
+        if (login.length() == 17 && hyphenCount == 2){
+            log.info("Getting by UserCode");
+            return findByUserCode.apply(login).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        }
+
+        log.info("Not allowed {}", login);
+        throw new UsernameNotFoundException("User not found! Try using uuid or UserCode as identifier");
+    }
+
+    public static UserEntity getBy(String login, Integer roleId, UserRepository repository){
+        long hyphenCount = login.chars().filter(ch -> ch == '-').count();
+        UserLookup findByUuid = (userCode) -> repository.findByUuid(userCode);
+        UserLookup findByUserCode = (userCode) -> repository.findByUserCode(userCode);
+        UserLookup findByEmail = (email) -> repository.findByEmail(email,roleId);
 
         if (login.length() == 36 && hyphenCount == 4){
             log.info("Getting by uuid");

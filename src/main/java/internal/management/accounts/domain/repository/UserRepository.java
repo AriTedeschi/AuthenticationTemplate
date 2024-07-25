@@ -14,9 +14,9 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     @Query(value = "SELECT generate_user_code()", nativeQuery = true)
     String generateUserCode() throws DataAccessException;
 
-    @Query(value = "SELECT * FROM TB_USER u WHERE u.email = ?1",
+    @Query(value = "SELECT * FROM TB_USER u WHERE u.user_code = (SELECT v.user_code FROM V_USER v where v.email=?1 and v.infix_code=?2)",
             nativeQuery = true)
-    Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findByEmail(String email, Integer roleId);
 
     @Query(value = "SELECT * FROM PUBLIC.TB_USER u WHERE u.user_code = ?1",
             nativeQuery = true)
@@ -25,4 +25,8 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     @Query(value = "SELECT * FROM PUBLIC.TB_USER u WHERE u.uuid = ?1",
             nativeQuery = true)
     Optional<UserEntity> findByUuid(String uuid);
+
+    @Query(value = "SELECT max(infix_code)+1 FROM V_USER where infix_code=?1 and PREFIX=?2",
+            nativeQuery = true)
+    Optional<Integer> getNextSubUserId(Integer roleId, String userPrefix);
 }

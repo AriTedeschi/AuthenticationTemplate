@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 class EmailRegisterValidatorTest {
@@ -26,10 +28,10 @@ class EmailRegisterValidatorTest {
         UserRepository repository = Mockito.mock(UserRepository.class);
         UserRegisterRequest request = new UserRegisterRequest(email,null,null,null);
         Optional<UserEntity> queryResponse = Objects.isNull(userEntity) ? Optional.empty() : Optional.of(userEntity);
-        when(repository.findByEmail(email)).thenReturn(queryResponse);
+        when(repository.findByEmail(eq(email), eq(0))).thenReturn(queryResponse);
 
-        UserRegisterValidatorFlow registerValidator = new UserRegisterValidatorFlow(request,"en",repository);
-        EmailRegisterValidator emailRegisterValidator = new EmailRegisterValidator(email, registerValidator, repository, null);
+        UserRegisterValidatorFlow registerValidator = new UserRegisterValidatorFlow(request,0,"en",repository);
+        EmailRegisterValidator emailRegisterValidator = new EmailRegisterValidator(email, 0,registerValidator, repository, null);
 
         emailRegisterValidator.validate();
         assertEquals(expectedError,registerValidator.containsError());
@@ -43,10 +45,10 @@ class EmailRegisterValidatorTest {
         UserRepository repository = Mockito.mock(UserRepository.class);
         UserRegisterRequest request = new UserRegisterRequest(email,null,null,null);
         Optional<UserEntity> queryResponse = Optional.empty();
-        when(repository.findByEmail(email)).thenReturn(queryResponse);
+        when(repository.findByEmail(eq(email), eq(0))).thenReturn(queryResponse);
 
-        UserRegisterValidatorFlow registerValidator = new UserRegisterValidatorFlow(request,locale,repository);
-        new EmailRegisterValidator(email, registerValidator, repository, null).validate();
+        UserRegisterValidatorFlow registerValidator = new UserRegisterValidatorFlow(request,0,locale,repository);
+        new EmailRegisterValidator(email, 0, registerValidator, repository, null).validate();
         ValidationException exception = assertThrows(ValidationException.class, registerValidator::validate);
 
         assertEquals(expectedMessage,exception.convert().get("email"));

@@ -22,7 +22,7 @@ class NameRegisterValidatorTest {
         UserRegisterRequest request = new UserRegisterRequest("email","password",firstName,lastName);
         NameVO name = new NameVO(firstName,lastName);
 
-        UserRegisterValidatorFlow registerValidator = new UserRegisterValidatorFlow(request,null,repository);
+        UserRegisterValidatorFlow registerValidator = new UserRegisterValidatorFlow(request,0,null,repository);
         new NameRegisterValidator(name, registerValidator,null).validate();
         assertEquals(expectedError,registerValidator.containsError());
     }

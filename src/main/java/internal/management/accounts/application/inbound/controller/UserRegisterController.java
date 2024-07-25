@@ -2,6 +2,7 @@ package internal.management.accounts.application.inbound.controller;
 
 
 import internal.management.accounts.application.annotation.RegisterOperation;
+import internal.management.accounts.application.inbound.request.InternalUserRegisterRequest;
 import internal.management.accounts.application.inbound.request.UserRegisterRequest;
 import internal.management.accounts.application.inbound.response.UserRegisterResponse;
 import internal.management.accounts.config.exception.ApiErrorMessage;
@@ -38,6 +39,25 @@ public class UserRegisterController {
             @RequestParam(value = "lang", required = false) String lang,
             HttpServletRequest request){
         UserRegisterResponse response = service.register(userRequest,lang);
+        URI location = ServletUriComponentsBuilder.fromRequestUri(request)
+                .path("/{accountCode}")
+                .buildAndExpand(response.userCode())
+                .toUri();
+        return ResponseEntity.created(location).body(response);
+    }
+
+
+    @PostMapping("/add")
+    @RegisterOperation(
+            summary = "Add Internal User",
+            responseClass = InternalUserRegisterRequest.class,
+            errorClass = ApiErrorMessage.class
+    )
+    public ResponseEntity<UserRegisterResponse> add(
+            @RequestBody InternalUserRegisterRequest userRequest,
+            @RequestParam(value = "lang", required = false) String lang,
+            HttpServletRequest request){
+        UserRegisterResponse response = service.addInternalUser(userRequest,lang);
         URI location = ServletUriComponentsBuilder.fromRequestUri(request)
                 .path("/{accountCode}")
                 .buildAndExpand(response.userCode())

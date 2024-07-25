@@ -29,6 +29,11 @@ public class RoleAddValidatorFlow implements ValidationFlow {
     public void addError(String field, String error) { this.errors.put(field,error); }
 
     @Override
+    public void addError(Map<String, String> errors) {
+        this.errors.putAll(errors);
+    }
+
+    @Override
     public Locale getLocale() {
         return SupportedLocales.fromKey(this.locale);
     }

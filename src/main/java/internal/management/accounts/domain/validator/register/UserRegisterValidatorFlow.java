@@ -19,16 +19,21 @@ public class UserRegisterValidatorFlow implements ValidationFlow {
     private Validator<String> initValidator;
     private String locale;
 
-    public UserRegisterValidatorFlow(UserRegisterRequest request, String locale, UserRepository repository){
+    public UserRegisterValidatorFlow(UserRegisterRequest request, Integer roleId, String locale, UserRepository repository){
         NameVO name = new NameVO(request.firstName(),request.lastName());
         this.locale = locale;
 
-        this.initValidator = new EmailRegisterValidator(request.email(),this, repository,
+        this.initValidator = new EmailRegisterValidator(request.email(), roleId,this, repository,
                              new NameRegisterValidator(name, this, null));
     }
 
     @Override
     public void addError(String field, String error) { this.errors.put(field,error); }
+
+    @Override
+    public void addError(Map<String, String> errors) {
+        this.errors.putAll(errors);
+    }
 
     @Override
     public Locale getLocale() {

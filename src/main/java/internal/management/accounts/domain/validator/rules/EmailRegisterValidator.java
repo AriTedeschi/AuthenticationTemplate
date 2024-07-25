@@ -10,12 +10,14 @@ import java.util.regex.Pattern;
 public class EmailRegisterValidator extends Validator<String> {
     private static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
     private final String email;
+    private final Integer roleId;
     private final UserRepository repository;
 
-    public EmailRegisterValidator(String email, ValidationFlow validation, UserRepository repository, Validator<?> nextValidation){
+    public EmailRegisterValidator(String email, Integer roleId, ValidationFlow validation, UserRepository repository, Validator<?> nextValidation){
         super(email,validation, nextValidation,"email:register.email.null");
         this.repository = repository;
         this.email=email;
+        this.roleId=roleId;
     }
 
     @Override
@@ -28,7 +30,7 @@ public class EmailRegisterValidator extends Validator<String> {
         Matcher matcher = pattern.matcher(email);
         if(!matcher.matches())
             validation.addError("email",getMessage("register.email.syntax"));
-        if(repository.findByEmail(email).isPresent())
+        if(repository.findByEmail(email, roleId).isPresent())
             validation.addError("email",getMessage("register.email.used"));
     }
 }

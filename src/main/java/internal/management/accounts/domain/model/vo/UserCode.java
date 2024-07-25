@@ -22,6 +22,12 @@ public class UserCode {
         accountSufix = parts[2];
     }
 
+    public void setFromUsercode(String userCodePrefix, String role, String subUserId) {
+        accountPrefix = userCodePrefix;
+        accountInfix = role;
+        accountSufix = subUserId;
+    }
+
     public String get(){
         return this.accountPrefix+"-"+accountInfix+"-"+accountSufix;
     }

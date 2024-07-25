@@ -10,6 +10,10 @@ public abstract class Validator<T> {
     private ResourceBundle bundle;
     protected T field;
 
+    protected Validator(T field){
+        this.field = field;
+    }
+
     protected Validator(T field, ValidationFlow validation, Validator<?> nextValidation, String nullMessage){
         this.field = field;
         this.validation=validation;

@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -36,5 +37,12 @@ public class CustomExceptionHandler {
             BadCredentialsException exception, WebRequest request) {
         ApiErrorMessage apiErrorMessage = new ApiErrorMessage(exception.getMessage());
         return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleQueryException(
+            UsernameNotFoundException exception, WebRequest request) {
+        ApiErrorMessage apiErrorMessage = new ApiErrorMessage(exception.getMessage());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 }

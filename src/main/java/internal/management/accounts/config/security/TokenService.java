@@ -28,6 +28,7 @@ public class TokenService {
                     .withIssuedAt(Instant.now())
                     .withExpiresAt(generateExpiration());
             tokenBuilder.withClaim("userId", (String) user.getProperties().getUuid().toString());
+            tokenBuilder.withClaim("roleId", (String) user.getProperties().getUserCode().getAccountInfix());
             return tokenBuilder.sign(algorithm);
         } catch (JWTCreationException ex) {
             throw new RuntimeException("Error while generating token",ex);
@@ -55,6 +56,21 @@ public class TokenService {
                     .build()
                     .verify(token);
             return jwt.getClaim("userId").asString();
+        } catch (JWTVerificationException ex) {
+            return "";
+        }
+    }
+
+    public String getRole(String token){
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            DecodedJWT jwt = JWT.require(algorithm)
+                    .withIssuer("auth-api")
+                    .build()
+                    .verify(token);
+            String roleId = jwt.getClaim("roleId").asString();
+            roleId = (roleId == "") ? "0" : roleId;
+            return roleId;
         } catch (JWTVerificationException ex) {
             return "";
         }
