@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: accounts
+  profiles:
+      active: ${SPRING_PROFILE:dev}
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:my-secret-key}
+server:
+  port: ${AUTH_SERVICE_PORT:8080} #Default port 8080
