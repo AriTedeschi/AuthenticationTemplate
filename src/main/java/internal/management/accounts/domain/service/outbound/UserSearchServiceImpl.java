@@ -3,6 +3,7 @@ package internal.management.accounts.domain.service.outbound;
 import internal.management.accounts.application.inbound.response.UserRegisterResponse;
 import internal.management.accounts.application.outbound.adapter.UserEntity2UserRegisterResponse;
 import internal.management.accounts.application.outbound.request.UserSearchFilter;
+import internal.management.accounts.config.security.AuthenticationToken;
 import internal.management.accounts.domain.model.UserEntity;
 import internal.management.accounts.domain.repository.UserRepository;
 import internal.management.accounts.domain.service.outbound.factory.UserLookupFactory;
@@ -75,9 +76,9 @@ public class UserSearchServiceImpl implements UserSearchService {
     @Override
     public UserRegisterResponse getBy(String identifier, String lang) {
         UserEntity entity = UserLookupFactory.getBy(identifier, repository);
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        String userId = ((AuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getUserId();
 
-        return new UserEntity2UserRegisterResponse(entity, !name.equals(entity.getUserCode().get())).getInstance();
+        return new UserEntity2UserRegisterResponse(entity, !userId.equals(entity.getUuid().toString())).getInstance();
     }
 
     private void addPredicate(List<Predicate> predicates, String field, String fieldColumn,

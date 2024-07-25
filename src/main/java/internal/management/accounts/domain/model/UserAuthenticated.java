@@ -29,6 +29,10 @@ public class UserAuthenticated implements UserDetails {
         return this.user.getUserCode().get();
     }
 
+    public UserEntity getProperties(){
+        return user;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

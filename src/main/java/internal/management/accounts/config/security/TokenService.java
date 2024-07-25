@@ -4,6 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.JWTCreator.*;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import internal.management.accounts.domain.model.UserAuthenticated;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,13 +22,13 @@ public class TokenService {
     public String generateToken(UserAuthenticated user){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            String token = JWT.create()
+            Builder tokenBuilder  = JWT.create()
                     .withIssuer("auth-api")
                     .withSubject(user.getUsername())
                     .withIssuedAt(Instant.now())
-                    .withExpiresAt(generateExpiration())
-                    .sign(algorithm);
-            return token;
+                    .withExpiresAt(generateExpiration());
+            tokenBuilder.withClaim("userId", (String) user.getProperties().getUuid().toString());
+            return tokenBuilder.sign(algorithm);
         } catch (JWTCreationException ex) {
             throw new RuntimeException("Error while generating token",ex);
         }
@@ -40,6 +42,19 @@ public class TokenService {
                     .build()
                     .verify(token)
                     .getSubject();
+        } catch (JWTVerificationException ex) {
+            return "";
+        }
+    }
+
+    public String getUserId(String token){
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            DecodedJWT jwt = JWT.require(algorithm)
+                    .withIssuer("auth-api")
+                    .build()
+                    .verify(token);
+            return jwt.getClaim("userId").asString();
         } catch (JWTVerificationException ex) {
             return "";
         }
