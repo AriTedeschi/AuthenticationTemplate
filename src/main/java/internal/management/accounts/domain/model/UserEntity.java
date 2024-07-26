@@ -9,7 +9,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "TB_USER")
@@ -20,8 +19,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserEntity {
     @Id
-    @GeneratedValue(generator = "UUID")
-    private UUID uuid;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String uuid;
 
     @Convert(converter = UserCodeConverter.class)
     @Column(name = "user_code")
