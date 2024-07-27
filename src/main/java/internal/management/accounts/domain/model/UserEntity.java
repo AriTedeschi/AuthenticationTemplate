@@ -39,6 +39,9 @@ public class UserEntity {
     @AttributeOverride(name = "lastName", column = @Column(name = "last_name"))
     private NameVO fullname;
 
+    @Column(name = "token_version")
+    private Integer tokenVersion;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

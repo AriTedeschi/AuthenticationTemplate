@@ -4,12 +4,15 @@ import internal.management.accounts.application.inbound.adapter.InternalUserRegi
 import internal.management.accounts.application.inbound.adapter.InternalUserRegisterRequest2UserRegisterRequest;
 import internal.management.accounts.application.inbound.adapter.UserEntity2UserRegisterResponse;
 import internal.management.accounts.application.inbound.adapter.UserRegisterRequest2UserEntity;
+import internal.management.accounts.application.inbound.request.ChangePasswordRequest;
 import internal.management.accounts.application.inbound.request.InternalUserRegisterRequest;
 import internal.management.accounts.application.inbound.request.UserRegisterRequest;
+import internal.management.accounts.application.inbound.response.NewUserPassword;
 import internal.management.accounts.application.inbound.response.UserRegisterResponse;
 import internal.management.accounts.config.exception.QueryException;
 import internal.management.accounts.config.exception.UserCodeOverflowException;
 import internal.management.accounts.config.security.AuthenticationToken;
+import internal.management.accounts.config.utility.RandomPasswordGenerator;
 import internal.management.accounts.domain.model.UserEntity;
 import internal.management.accounts.domain.repository.UserRepository;
 import internal.management.accounts.domain.service.outbound.factory.UserLookupFactory;
@@ -20,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import static internal.management.accounts.domain.model.vo.converter.UserCodeConverter.getRole;
 
 @Slf4j
 @Service
@@ -67,5 +72,22 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         newEntity.getUserCode().setFromUsercode(loggedPrefix, roleCode, String.format("%05d", nextSubUserId));
 
         return new UserEntity2UserRegisterResponse(repository.save(newEntity), false).getInstance();
+    }
+
+    @Override
+    public NewUserPassword changePassword(ChangePasswordRequest passwordRequest, String lang) {
+        String login = passwordRequest.login();
+        UserEntity userEntity = UserLookupFactory.getBy(login, getRole(login), repository);
+        String newPassword = RandomPasswordGenerator.generateRandomPassword(12);
+        userEntity.setTokenVersion(userEntity.getTokenVersion()+1);
+        userEntity.getPassword().encode(newPassword);
+        repository.save(userEntity);
+        return new NewUserPassword(userEntity.getUuid(),userEntity.getUserCode().get(),newPassword);
+    }
+
+    @Override
+    public NewUserPassword changePassword() {
+        String userId = ((AuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getUserId();
+        return changePassword(new ChangePasswordRequest(userId), null);
     }
 }

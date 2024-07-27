@@ -31,5 +31,14 @@ public class UserCodeConverter implements AttributeConverter<UserCode, String> {
         }
         return parts;
     }
+
+    public static boolean isUserCode(String login){
+        long hyphenCount = login.chars().filter(ch -> ch == '-').count();
+        return login.length() == 17 && hyphenCount == 2;
+    }
+
+    public static Integer getRole(String login){
+        return isUserCode(login) ? Integer.valueOf(login.split("-")[1]) : null;
+    }
 }
 

@@ -17,6 +17,7 @@ public class InternalUserRegisterRequest2UserEntity {
                 .email(new EmailVO(request.email()))
                 .password(new PasswordVO().encode(request.password()))
                 .fullname(new NameVO(request.firstName(), request.lastName()))
+                .tokenVersion(1)
                 .createdAt(LocalDateTime.now())
                 .build();
     }

@@ -6,7 +6,11 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.JWTCreator.*;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import internal.management.accounts.config.exception.TokenExpiredException;
 import internal.management.accounts.domain.model.UserAuthenticated;
+import internal.management.accounts.domain.model.UserEntity;
+import internal.management.accounts.domain.repository.UserRepository;
+import internal.management.accounts.domain.service.outbound.factory.UserLookupFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +22,11 @@ import java.time.ZoneOffset;
 public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
+    private final UserRepository userRepository;
+
+    public TokenService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public String generateToken(UserAuthenticated user){
         try {
@@ -29,6 +38,7 @@ public class TokenService {
                     .withExpiresAt(generateExpiration());
             tokenBuilder.withClaim("userId", (String) user.getProperties().getUuid().toString());
             tokenBuilder.withClaim("roleId", (String) user.getProperties().getUserCode().getAccountInfix());
+            tokenBuilder.withClaim("version", user.getProperties().getTokenVersion());
             return tokenBuilder.sign(algorithm);
         } catch (JWTCreationException ex) {
             throw new RuntimeException("Error while generating token",ex);
@@ -38,11 +48,19 @@ public class TokenService {
     public String validateToken(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.require(algorithm)
+            DecodedJWT jwt =  JWT.require(algorithm)
                     .withIssuer("auth-api")
                     .build()
-                    .verify(token)
-                    .getSubject();
+                    .verify(token);
+            String userId = jwt.getClaim("userId").asString();
+            int tokenVersion = jwt.getClaim("version").asInt();
+
+            UserEntity user = UserLookupFactory.getBy(userId, userRepository);
+
+            if (user.getTokenVersion() != tokenVersion)
+                throw new TokenExpiredException("Expired token, please login again");
+
+            return jwt.getSubject();
         } catch (JWTVerificationException ex) {
             return "";
         }

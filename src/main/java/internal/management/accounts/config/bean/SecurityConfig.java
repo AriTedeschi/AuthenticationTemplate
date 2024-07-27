@@ -14,15 +14,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     private static final String[] WHITELIST_SWAGGER = {"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/h2-console/**","/favicon.ico"};
     private static final String[] WHITELIST_REGISTER_AUTH = {"/users/register","/login"};
-    private static final String[] BLACKLIST_ENDPOINTS = {"/users","/roles","/roles/*"};
+    private static final String[] BLACKLIST_ENDPOINTS = {"/users","/roles","/roles/*", "/password", "/my-password"};
     @Autowired
     private SecurityFilter securityFilter;
+    @Autowired
+    private FilterChainExceptionHandler filterChainExceptionHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -31,12 +34,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->{
                     auth.requestMatchers(HttpMethod.GET,BLACKLIST_ENDPOINTS).authenticated();
                     auth.requestMatchers(HttpMethod.POST,BLACKLIST_ENDPOINTS).authenticated();
+                    auth.requestMatchers(HttpMethod.PATCH,BLACKLIST_ENDPOINTS).authenticated();
                     auth.requestMatchers(HttpMethod.POST,WHITELIST_REGISTER_AUTH).permitAll();
                     auth.requestMatchers(WHITELIST_SWAGGER).permitAll();
                     auth.requestMatchers("/error").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .headers(headers -> headers.frameOptions().sameOrigin())
+                .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
