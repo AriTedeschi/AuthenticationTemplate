@@ -1,3 +1,3 @@
 package internal.management.accounts.application.inbound.request;
 
-public record ChangePasswordRequest(String login, Integer roleId) {}
+public record ChangePasswordRequest(String login) {}

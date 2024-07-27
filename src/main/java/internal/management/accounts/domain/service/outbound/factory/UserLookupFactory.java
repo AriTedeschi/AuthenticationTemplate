@@ -5,6 +5,8 @@ import internal.management.accounts.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import static internal.management.accounts.domain.model.vo.converter.UserCodeConverter.isUserCode;
+
 @Slf4j
 public class UserLookupFactory {
 
@@ -19,7 +21,7 @@ public class UserLookupFactory {
             return findByUuid.apply(login).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         }
 
-        if (login.length() == 17 && hyphenCount == 2){
+        if (isUserCode(login)){
             log.info("Getting by UserCode");
             return findByUserCode.apply(login).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         }

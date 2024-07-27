@@ -1,6 +1,7 @@
 package internal.management.accounts.application.inbound.controller;
 
 
+import internal.management.accounts.application.annotation.PatchOperation;
 import internal.management.accounts.application.annotation.RegisterOperation;
 import internal.management.accounts.application.inbound.request.ChangePasswordRequest;
 import internal.management.accounts.application.inbound.request.InternalUserRegisterRequest;
@@ -9,6 +10,7 @@ import internal.management.accounts.application.inbound.response.NewUserPassword
 import internal.management.accounts.application.inbound.response.UserRegisterResponse;
 import internal.management.accounts.config.exception.ApiErrorMessage;
 import internal.management.accounts.domain.service.inbound.UserRegisterService;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -66,10 +68,14 @@ public class UserRegisterController {
 
 
     @PatchMapping("/password")
-    @RegisterOperation(
+    @PatchOperation(
             summary = "Change password",
             responseClass = NewUserPassword.class,
-            errorClass = ApiErrorMessage.class
+            errorClass = ApiErrorMessage.class,
+            examples = {@ExampleObject(
+                    name = "Change password ",
+                    value = "{\"login\": \"77777-00010-00000\", \"campo2\": \"valor2\"}"
+            )}
     )
     public ResponseEntity<NewUserPassword> changePassword(
             @RequestBody ChangePasswordRequest passwordRequest,

@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,6 +24,8 @@ public class SecurityConfig {
     private static final String[] BLACKLIST_ENDPOINTS = {"/users","/roles","/roles/*", "/password", "/my-password"};
     @Autowired
     private SecurityFilter securityFilter;
+    @Autowired
+    private FilterChainExceptionHandler filterChainExceptionHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -38,6 +41,7 @@ public class SecurityConfig {
                     auth.anyRequest().authenticated();
                 })
                 .headers(headers -> headers.frameOptions().sameOrigin())
+                .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

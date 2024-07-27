@@ -1,5 +1,6 @@
 package internal.management.accounts.config.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,5 +45,12 @@ public class CustomExceptionHandler {
             UsernameNotFoundException exception, WebRequest request) {
         ApiErrorMessage apiErrorMessage = new ApiErrorMessage(exception.getMessage());
         return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<Object> handleQueryException(
+            TokenExpiredException exception, WebRequest request) {
+        ApiErrorMessage apiErrorMessage = new ApiErrorMessage(exception.getMessage());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE);
     }
 }

@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.JWTCreator.*;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import internal.management.accounts.config.exception.TokenExpiredException;
 import internal.management.accounts.domain.model.UserAuthenticated;
 import internal.management.accounts.domain.model.UserEntity;
 import internal.management.accounts.domain.repository.UserRepository;
@@ -57,7 +58,7 @@ public class TokenService {
             UserEntity user = UserLookupFactory.getBy(userId, userRepository);
 
             if (user.getTokenVersion() != tokenVersion)
-                return "";
+                throw new TokenExpiredException("Expired token, please login again");
 
             return jwt.getSubject();
         } catch (JWTVerificationException ex) {

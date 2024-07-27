@@ -14,7 +14,6 @@ import internal.management.accounts.config.exception.UserCodeOverflowException;
 import internal.management.accounts.config.security.AuthenticationToken;
 import internal.management.accounts.config.utility.RandomPasswordGenerator;
 import internal.management.accounts.domain.model.UserEntity;
-import internal.management.accounts.domain.model.vo.PasswordVO;
 import internal.management.accounts.domain.repository.UserRepository;
 import internal.management.accounts.domain.service.outbound.factory.UserLookupFactory;
 import internal.management.accounts.domain.validator.SupportedLocales;
@@ -24,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import static internal.management.accounts.domain.model.vo.converter.UserCodeConverter.getRole;
 
 @Slf4j
 @Service
@@ -75,7 +76,8 @@ public class UserRegisterServiceImpl implements UserRegisterService {
 
     @Override
     public NewUserPassword changePassword(ChangePasswordRequest passwordRequest, String lang) {
-        UserEntity userEntity = UserLookupFactory.getBy(passwordRequest.login(), passwordRequest.roleId(), repository);
+        String login = passwordRequest.login();
+        UserEntity userEntity = UserLookupFactory.getBy(login, getRole(login), repository);
         String newPassword = RandomPasswordGenerator.generateRandomPassword(12);
         userEntity.setTokenVersion(userEntity.getTokenVersion()+1);
         userEntity.getPassword().encode(newPassword);
@@ -86,6 +88,6 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     @Override
     public NewUserPassword changePassword() {
         String userId = ((AuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getUserId();
-        return changePassword(new ChangePasswordRequest(userId, null), null);
+        return changePassword(new ChangePasswordRequest(userId), null);
     }
 }

@@ -2,6 +2,7 @@ package internal.management.accounts.application.annotation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.lang.annotation.ElementType;
@@ -23,4 +24,5 @@ public @interface RegisterOperation {
     String summary() default "Default summary";
     Class<?> responseClass() default Object.class;
     Class<?> errorClass() default Object.class;
+    ExampleObject[] examples() default {};
 }
