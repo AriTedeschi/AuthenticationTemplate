@@ -24,5 +24,4 @@ public @interface RegisterOperation {
     String summary() default "Default summary";
     Class<?> responseClass() default Object.class;
     Class<?> errorClass() default Object.class;
-    ExampleObject[] examples() default {};
 }

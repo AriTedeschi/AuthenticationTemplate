@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @EnableWebSecurity
 public class SecurityConfig {
     private static final String[] WHITELIST_SWAGGER = {"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/h2-console/**","/favicon.ico"};
-    private static final String[] WHITELIST_REGISTER_AUTH = {"/users/register","/login"};
+    private static final String[] WHITELIST_REGISTER_AUTH = {"/users/register","/login","/password"};
     private static final String[] BLACKLIST_ENDPOINTS = {"/users","/roles","/roles/*", "/password", "/my-password"};
     @Autowired
     private SecurityFilter securityFilter;
@@ -36,6 +36,7 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.POST,BLACKLIST_ENDPOINTS).authenticated();
                     auth.requestMatchers(HttpMethod.PATCH,BLACKLIST_ENDPOINTS).authenticated();
                     auth.requestMatchers(HttpMethod.POST,WHITELIST_REGISTER_AUTH).permitAll();
+                    auth.requestMatchers(HttpMethod.PATCH,WHITELIST_REGISTER_AUTH).permitAll();
                     auth.requestMatchers(WHITELIST_SWAGGER).permitAll();
                     auth.requestMatchers("/error").permitAll();
                     auth.anyRequest().authenticated();

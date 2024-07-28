@@ -42,6 +42,9 @@ public class UserEntity {
     @Column(name = "token_version")
     private Integer tokenVersion;
 
+    @Column(name = "effective_password")
+    private boolean effectivePassword;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

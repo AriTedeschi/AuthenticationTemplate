@@ -71,11 +71,7 @@ public class UserRegisterController {
     @PatchOperation(
             summary = "Change password",
             responseClass = NewUserPassword.class,
-            errorClass = ApiErrorMessage.class,
-            examples = {@ExampleObject(
-                    name = "Change password ",
-                    value = "{\"login\": \"77777-00010-00000\", \"campo2\": \"valor2\"}"
-            )}
+            errorClass = ApiErrorMessage.class
     )
     public ResponseEntity<NewUserPassword> changePassword(
             @RequestBody ChangePasswordRequest passwordRequest,

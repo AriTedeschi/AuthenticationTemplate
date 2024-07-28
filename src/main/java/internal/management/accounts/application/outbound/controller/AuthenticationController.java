@@ -33,8 +33,8 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(login.login(),login.password());
         var auth = authenticationManager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((UserAuthenticated) auth.getPrincipal());
+        LoginResponse response = tokenService.generateToken((UserAuthenticated) auth.getPrincipal());
 
-        return ResponseEntity.ok(new LoginResponse(token));
+        return ResponseEntity.ok(response);
     }
 }

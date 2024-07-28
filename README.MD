@@ -18,12 +18,6 @@ It also an uuid as an identifier.
 * <b>User's Authentication</b>: Allows users to authenticate using an email, custom usercode or an uuid.
 
 Authentication payload:
-```
-{
-  "login": "a@gmail.com",
-  "password": "123"
-}
-```
 
 ```
 {
@@ -55,6 +49,7 @@ erDiagram
         String password
         String first_name
         String last_name
+        Int token_version
         Datetime createdAt
     }
     

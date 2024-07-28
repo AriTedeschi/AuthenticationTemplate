@@ -18,6 +18,7 @@ public class UserRegisterRequest2UserEntity {
                 .password(new PasswordVO().encode(request.password()))
                 .fullname(new NameVO(request.firstName(), request.lastName()))
                 .tokenVersion(1)
+                .effectivePassword(true)
                 .createdAt(LocalDateTime.now())
                 .build();
     }

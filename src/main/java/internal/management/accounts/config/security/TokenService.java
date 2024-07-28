@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.JWTCreator.*;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import internal.management.accounts.application.outbound.response.LoginResponse;
 import internal.management.accounts.config.exception.TokenExpiredException;
 import internal.management.accounts.domain.model.UserAuthenticated;
 import internal.management.accounts.domain.model.UserEntity;
@@ -28,7 +29,7 @@ public class TokenService {
         this.userRepository = userRepository;
     }
 
-    public String generateToken(UserAuthenticated user){
+    public LoginResponse generateToken(UserAuthenticated user){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             Builder tokenBuilder  = JWT.create()
@@ -36,10 +37,13 @@ public class TokenService {
                     .withSubject(user.getUsername())
                     .withIssuedAt(Instant.now())
                     .withExpiresAt(generateExpiration());
-            tokenBuilder.withClaim("userId", (String) user.getProperties().getUuid().toString());
-            tokenBuilder.withClaim("roleId", (String) user.getProperties().getUserCode().getAccountInfix());
-            tokenBuilder.withClaim("version", user.getProperties().getTokenVersion());
-            return tokenBuilder.sign(algorithm);
+            UserEntity userEntity = user.getProperties();
+            tokenBuilder.withClaim("userId", (String) userEntity.getUuid().toString());
+            tokenBuilder.withClaim("roleId", (String) userEntity.getUserCode().getAccountInfix());
+            tokenBuilder.withClaim("version", userEntity.getTokenVersion());
+            String token = tokenBuilder.sign(algorithm);
+            String warning = userEntity.isEffectivePassword() ? null : "The provided password is temporary, please change password!";
+            return new LoginResponse(token,warning);
         } catch (JWTCreationException ex) {
             throw new RuntimeException("Error while generating token",ex);
         }
@@ -59,6 +63,9 @@ public class TokenService {
 
             if (user.getTokenVersion() != tokenVersion)
                 throw new TokenExpiredException("Expired token, please login again");
+
+            if (user.getTokenVersion() != tokenVersion)
+                throw new TokenExpiredException("Expired password, please change password again at /password");
 
             return jwt.getSubject();
         } catch (JWTVerificationException ex) {

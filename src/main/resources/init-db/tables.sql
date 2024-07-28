@@ -6,6 +6,7 @@ CREATE TABLE TB_USER (
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     token_version integer NOT NULL,
+    effective_password boolean NOT NULL,
     created_at TIMESTAMP NOT NULL
 );
 
