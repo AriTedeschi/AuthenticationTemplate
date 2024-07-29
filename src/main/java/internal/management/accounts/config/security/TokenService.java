@@ -64,7 +64,7 @@ public class TokenService {
             if (user.getTokenVersion() != tokenVersion)
                 throw new TokenExpiredException("Expired token, please login again");
 
-            if (user.getTokenVersion() != tokenVersion)
+            if (!user.isEffectivePassword())
                 throw new TokenExpiredException("Expired password, please change password again at /password");
 
             return jwt.getSubject();

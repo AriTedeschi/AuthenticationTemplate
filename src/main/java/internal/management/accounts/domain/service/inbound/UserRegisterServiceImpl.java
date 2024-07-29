@@ -81,6 +81,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         String newPassword = RandomPasswordGenerator.generateRandomPassword(12);
         userEntity.setTokenVersion(userEntity.getTokenVersion()+1);
         userEntity.getPassword().encode(newPassword);
+        userEntity.setEffectivePassword(false);
         repository.save(userEntity);
         return new NewUserPassword(userEntity.getUuid(),userEntity.getUserCode().get(),newPassword);
     }
